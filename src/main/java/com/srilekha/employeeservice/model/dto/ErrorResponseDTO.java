@@ -1,7 +1,6 @@
 package com.srilekha.employeeservice.model.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter

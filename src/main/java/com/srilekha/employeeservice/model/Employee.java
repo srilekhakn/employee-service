@@ -1,6 +1,7 @@
 package com.srilekha.employeeservice.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Document("employee_service")
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class Employee {
@@ -48,11 +50,4 @@ public class Employee {
      */
     private List<String> hobbies;
 
-    public Employee(String emailId, String firstName, String lastName, Date birtDate, List<String> hobbies) {
-        this.emailId = emailId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birtDate = birtDate;
-        this.hobbies = hobbies;
-    }
 }
