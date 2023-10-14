@@ -1,0 +1,14 @@
+version: "3"
+services:
+  employeemongodb:
+    image: mongo:latest
+    container_name: "employeemongodb"
+    ports:
+      - 27017:27017
+  employee:
+    image: employee
+    container_name: employee
+    ports:
+      - 8080:8080
+    links:
+      - employeemongodb

@@ -1,17 +1,17 @@
 package com.srilekha.employeeservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 import java.util.List;
 
-@Entity
-@RequiredArgsConstructor
+@Document("employee_service")
+@NoArgsConstructor
 @Setter
 @Getter
 public class Employee {
@@ -21,7 +21,7 @@ public class Employee {
      * id of the employee
      */
     @Id
-    private Long id;
+    private String id;
 
     /**
      * EmailId of the Employee.
@@ -41,11 +41,18 @@ public class Employee {
     /**
      * Birth Date of the Employee
      */
-    private LocalDateTime birtDate;
+    private Date birtDate;
 
     /**
      * Hobbies of the Employee
      */
     private List<String> hobbies;
 
+    public Employee(String emailId, String firstName, String lastName, Date birtDate, List<String> hobbies) {
+        this.emailId = emailId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birtDate = birtDate;
+        this.hobbies = hobbies;
+    }
 }

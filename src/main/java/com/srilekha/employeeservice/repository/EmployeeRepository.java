@@ -1,18 +1,18 @@
 package com.srilekha.employeeservice.repository;
 
 import com.srilekha.employeeservice.model.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public interface EmployeeRepository extends JpaRepository<Employee,Long> {
+public interface EmployeeRepository extends MongoRepository<Employee, UUID> {
 
-    @Query("select e from Exercise e where e.userId in :userIds and (e.startTime > :startDate and e.startTime < :currentDate)")
-    List<Employee> findByUserIds(@Param("userIds") Collection<Long> userIds, @Param("startDate") LocalDateTime startDate, @Param("currentDate") LocalDateTime currentDate);
+    boolean existsByEmailId(String emailId);
 
-    List<Employee> findByUserId(Long userId);
+    Optional<Employee> findById(String uuid);
+
+    boolean existsById(String employeeId);
+
+    void deleteById(String employeeId);
 }

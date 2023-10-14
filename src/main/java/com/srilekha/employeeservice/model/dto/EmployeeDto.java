@@ -1,21 +1,27 @@
 package com.srilekha.employeeservice.model.dto;
 
 import com.srilekha.employeeservice.model.Employee;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class EmployeeDto {
     /**
      * id of the employee
      */
-    private Long id;
+    private String id;
 
     /**
      * EmailId of the Employee.
      */
+    @Pattern(regexp = "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$")
     private String emailId;
 
     /**
@@ -31,7 +37,7 @@ public class EmployeeDto {
     /**
      * Birth Date of the Employee
      */
-    private LocalDateTime birtDate;
+    private Date birtDate;
 
     /**
      * Hobbies of the Employee
@@ -40,7 +46,6 @@ public class EmployeeDto {
 
     public static Employee toEmployee(final EmployeeDto dto) {
         final Employee e = new Employee();
-        e.setId(dto.id);
         if (dto.emailId != null) {
             e.setEmailId(dto.emailId.trim());
         }
@@ -53,7 +58,7 @@ public class EmployeeDto {
         return e;
     }
 
-    public static EmployeeDto fromExercise(final Employee e) {
+    public static EmployeeDto fromEmployee(final Employee e) {
         final EmployeeDto dto = new EmployeeDto();
         dto.id = e.getId();
         dto.emailId = e.getEmailId();
