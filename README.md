@@ -1,5 +1,9 @@
 # employee-service
 
+Software requirments:
+1. Java 17 (Oracle)
+2. Latest version of docker (I tested it on Docker version 24.0.2, build cb74dfc current latest)
+
 List of functionalities implemented in the application
 1. API's for create, update, get , get all, delete Employee
 2. for each crud operation event is triggered to kafka topic employee-events
