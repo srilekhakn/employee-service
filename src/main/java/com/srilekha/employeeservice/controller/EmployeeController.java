@@ -29,7 +29,7 @@ public class EmployeeController {
     @Operation(summary = "Insert a new Employee", description = "Persist a new Employee and generate its id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Employee created")})
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})
-    ResponseEntity<EmployeeDto> createEmployee(@RequestBody final EmployeeDto employeeDto) {
+    ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody final EmployeeDto employeeDto) {
         log.info("In Create Employee..");
         Employee employee = employeeService.createEmployee(EmployeeDto.toEmployee(employeeDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(EmployeeDto.fromEmployee(employee));
