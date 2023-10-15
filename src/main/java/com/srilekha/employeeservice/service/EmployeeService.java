@@ -1,20 +1,28 @@
 package com.srilekha.employeeservice.service;
 
 import com.srilekha.employeeservice.model.Employee;
+import com.srilekha.employeeservice.model.events.EmployeeEvent;
+import com.srilekha.employeeservice.model.events.EventType;
 import com.srilekha.employeeservice.model.exception.NotFoundException;
 import com.srilekha.employeeservice.model.exception.RecordAlreadyExistException;
 import com.srilekha.employeeservice.repository.EmployeeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private KafkaMessagePublisher kafkaMessagePublisher;
 
 
     /**
@@ -28,7 +36,16 @@ public class EmployeeService {
      */
     public Employee createEmployee(Employee employee) throws RecordAlreadyExistException {
         validateEmailIfExists(employee.getEmailId());
-        return employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+        log.info("Employee Saved with id ${}", savedEmployee.getId());
+        try {
+            EmployeeEvent employeeEvent = new EmployeeEvent(UUID.randomUUID().toString(),savedEmployee.getId(),"Creating Employee", EventType.CREATED);
+            kafkaMessagePublisher.sendMessageToTopicEmployeeEvents(employeeEvent);
+            log.info("Create Event published");
+        }catch (Exception ex){
+            log.info(ex.getMessage());
+        }
+        return savedEmployee;
     }
 
 
@@ -59,7 +76,18 @@ public class EmployeeService {
             validateEmailIfExists(updateEmployee.getEmailId());
             employee.setEmailId(updateEmployee.getEmailId());
         }
-        return employeeRepository.save(employee);
+        Employee updatedEmployee = employeeRepository.save(employee);
+        log.info("Employee Updated with id ${}", updatedEmployee.getId());
+
+        try {
+            EmployeeEvent employeeUpdatedEvent = new EmployeeEvent(UUID.randomUUID().toString(),employeeId,"Updating Employee", EventType.UPDATED);
+            kafkaMessagePublisher.sendMessageToTopicEmployeeEvents( employeeUpdatedEvent);
+            log.info("Update Event published");
+        }catch (Exception ex){
+            log.info(ex.getMessage());
+        }
+
+        return updatedEmployee;
     }
 
     /**
@@ -105,6 +133,18 @@ public class EmployeeService {
             throw new NotFoundException("Employee record not found");
         }
         employeeRepository.deleteById(employeeId);
+        log.info("Employee Deleted with id ${}",employeeId);
+        try {
+            EmployeeEvent employeeDeletedEvent = new EmployeeEvent(UUID.randomUUID().toString(),employeeId,"Deleting Employee",EventType.DELETED);
+            kafkaMessagePublisher.sendMessageToTopicEmployeeEvents(employeeDeletedEvent);
+            log.info("Delete Event published");
+        }catch (Exception ex){
+            log.info(ex.getMessage());
+        }
+    }
+
+    public boolean checkIfEmployeeExists(String employeeId){
+        return employeeRepository.existsById(employeeId);
     }
 
     private void validateEmailIfExists(String emailId) throws RecordAlreadyExistException{

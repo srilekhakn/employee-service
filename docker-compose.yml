@@ -1,14 +1,21 @@
 version: "3"
 services:
-  employeemongodb:
-    image: mongo:latest
-    container_name: "employeemongodb"
+  employee_mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: "employee_mongodb"
     ports:
       - 27017:27017
-  employee:
-    image: employee
-    container_name: employee
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
     ports:
-      - 8080:8080
-    links:
-      - employeemongodb
+      - "2181:2181"
+  employee_kafka:
+    image: wurstmeister/kafka
+    container_name: "employee_kafka"
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "employee-events:1:1"
