@@ -16,9 +16,8 @@ To run the application :
 2. cd  employee-service
 3. git checkout master
 4. ./gradlew build (Executes all the testcases)
-5. ./gradlew bootjar
-6. mv build/libs/employee-service-0.0.1-SNAPSHOT.jar ./employee-service.jar
-7. Open new terminal at this location and run "docker-compose up" (Make sure to have latest version of docker)
-8. java -jar employee-service.jar
-9. Access the API documentation at http://localhost:8080/swagger-ui/index.html and tryit out in the same page
-10. You can see the logs for API requests and message sent to Kafka and consumer consuming data
+5. ./gradlew test
+6. Open new terminal at this location and run "docker-compose up" (Make sure to have latest version of docker)
+7. ./gradlew run
+8. Access the API documentation at http://localhost:8080/swagger-ui/index.html and tryit out in the same page
+9. You can see the logs for API requests and message sent to Kafka and consumer consuming data
